@@ -52,6 +52,16 @@ const roomsData = [
 
 let currentRoom = null;
 
+// Функция для случайного перемешивания массива (алгоритм Фишера-Йетса)
+function shuffleArray(array) {
+    const newArray = [...array]; // Создаем копию массива, чтобы не менять исходные данные
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+}
+
 // Отображение номеров
 function displayRooms(rooms) {
     const grid = document.getElementById('rooms-grid');
@@ -83,7 +93,8 @@ function applyFilter() {
     const filter = document.getElementById('category-filter').value;
     
     if (filter === 'all') {
-        displayRooms(roomsData);
+        // При сбросе фильтра снова перемешиваем номера
+        displayRooms(shuffleArray(roomsData));
     } else {
         const filtered = roomsData.filter(room => room.category === filter);
         displayRooms(filtered);
@@ -93,7 +104,8 @@ function applyFilter() {
 // Сброс фильтра
 function resetFilter() {
     document.getElementById('category-filter').value = 'all';
-    displayRooms(roomsData);
+    // При сбросе фильтра снова перемешиваем номера
+    displayRooms(shuffleArray(roomsData));
 }
 
 // Открытие страницы бронирования
@@ -212,26 +224,54 @@ function submitBooking(event) {
     
     // Валидация даты заезда
     const checkin = document.getElementById('checkin');
+    let checkinDateObj = null;
+    
     if (!validateDate(checkin.value)) {
         checkin.classList.add('error');
+        document.getElementById('checkin-error').textContent = 'Формат: ДД.ММ.ГГГГ';
         document.getElementById('checkin-error').style.display = 'block';
         isValid = false;
     } else {
-        checkin.classList.remove('error');
-        checkin.classList.add('success');
-        document.getElementById('checkin-error').style.display = 'none';
+        const cParts = checkin.value.split('.');
+        checkinDateObj = new Date(parseInt(cParts[2]), parseInt(cParts[1]) - 1, parseInt(cParts[0]));
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        if (checkinDateObj < today) {
+            checkin.classList.add('error');
+            document.getElementById('checkin-error').textContent = 'Дата заезда не может быть в прошлом';
+            document.getElementById('checkin-error').style.display = 'block';
+            isValid = false;
+        } else {
+            checkin.classList.remove('error');
+            checkin.classList.add('success');
+            document.getElementById('checkin-error').style.display = 'none';
+        }
     }
     
     // Валидация даты выезда
     const checkout = document.getElementById('checkout');
+    let checkoutDateObj = null;
+    
     if (!validateDate(checkout.value)) {
         checkout.classList.add('error');
+        document.getElementById('checkout-error').textContent = 'Формат: ДД.ММ.ГГГГ';
         document.getElementById('checkout-error').style.display = 'block';
         isValid = false;
     } else {
-        checkout.classList.remove('error');
-        checkout.classList.add('success');
-        document.getElementById('checkout-error').style.display = 'none';
+        const oParts = checkout.value.split('.');
+        checkoutDateObj = new Date(parseInt(oParts[2]), parseInt(oParts[1]) - 1, parseInt(oParts[0]));
+        
+        if (checkinDateObj && checkoutDateObj <= checkinDateObj) {
+            checkout.classList.add('error');
+            document.getElementById('checkout-error').textContent = 'Дата выезда должна быть позже даты заезда';
+            document.getElementById('checkout-error').style.display = 'block';
+            isValid = false;
+        } else {
+            checkout.classList.remove('error');
+            checkout.classList.add('success');
+            document.getElementById('checkout-error').style.display = 'none';
+        }
     }
     
     if (isValid) {
@@ -285,7 +325,6 @@ function setupPhoneMask() {
             }
         });
         
-        // Удаляем символы при фокусе для удобного редактирования
         phoneInput.addEventListener('focus', function(e) {
             if (e.target.value === '+7()--') {
                 e.target.value = '';
@@ -296,8 +335,8 @@ function setupPhoneMask() {
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
-    // Отображаем все номера
-    displayRooms(roomsData);
+    // Отображаем номера в случайном порядке при загрузке
+    displayRooms(shuffleArray(roomsData));
     
     // Настраиваем маску для телефона
     setupPhoneMask();
