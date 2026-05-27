@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сервис бронирования номеров</title>
+    <!-- Подключение шрифтов Google Fonts (Montserrat) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" id="capture-area">
+        
+        <!-- Шапка сайта -->
+        <header class="header">
+            <div>
+                <h1>🏨 Booking Service</h1>
+                <span class="slogan">Надежно. Удобно. Быстро.</span>
+            </div>
+            <button class="btn btn-screenshot" onclick="saveScreenshot()">📸 Сохранить скриншот</button>
+        </header>
+
+        <!-- Страница каталога -->
+        <div class="catalog-page" id="catalog-page">
+            
+            <!-- Блок фильтров -->
+            <div class="filters">
+                <label for="category-filter"><strong>Фильтр по категориям:</strong></label>
+                <select id="category-filter">
+                    <option value="all">Все категории</option>
+                    <option value="standard">Standard</option>
+                    <option value="lux">Lux</option>
+                    <option value="premium">Premium</option>
+                </select>
+                <button class="btn btn-primary" onclick="applyFilter()">Применить</button>
+                <button class="btn btn-secondary" onclick="resetFilter()">Сбросить фильтр</button>
+            </div>
+
+            <!-- Сетка с номерами (заполняется через JavaScript) -->
+            <div class="rooms-grid" id="rooms-grid">
+                <!-- Карточки будут добавлены сюда автоматически -->
+            </div>
+        </div>
+
+        <!-- Страница бронирования (скрыта по умолчанию) -->
+        <div class="booking-page" id="booking-page">
+            <button class="btn btn-secondary back-btn" onclick="goBack()">← Назад к каталогу</button>
+            
+            <h2>📝 Бронирование номера</h2>
+            
+            <!-- Сообщение об успехе -->
+            <div class="success-message" id="success-message">
+                ✅ Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.
+            </div>
+
+            <form id="booking-form" onsubmit="submitBooking(event)">
+                <div class="form-group">
+                    <label for="name">Имя *</label>
+                    <input type="text" id="name" name="name" placeholder="Введите ваше имя" required>
+                    <div class="error-message" id="name-error">Разрешены только кириллица, пробелы, точки и тире</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="surname">Фамилия *</label>
+                    <input type="text" id="surname" name="surname" placeholder="Введите вашу фамилию" required>
+                    <div class="error-message" id="surname-error">Разрешены только кириллица, пробелы, точки и тире</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Телефон *</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+7(XXX)XXX-XX-XX" required>
+                    <div class="error-message" id="phone-error">Неверный формат телефона. Пример: +7(900)123-45-67</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail *</label>
+                    <input type="email" id="email" name="email" placeholder="example@mail.ru" required>
+                    <div class="error-message" id="email-error">Введите корректный e-mail адрес</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkin">Дата заезда *</label>
+                        <input type="text" id="checkin" name="checkin" placeholder="ДД.ММ.ГГГГ" required>
+                        <div class="error-message" id="checkin-error">Формат: ДД.ММ.ГГГГ</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkout">Дата выезда *</label>
+                        <input type="text" id="checkout" name="checkout" placeholder="ДД.ММ.ГГГГ" required>
+                        <div class="error-message" id="checkout-error">Формат: ДД.ММ.ГГГГ</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-submit">
+                    Отправить заявку
+                </button>
+            </form>
+        </div>
+
+        <!-- Подвал -->
+        <footer class="footer">
+            <p><strong>Адрес:</strong> ул. Ленина, 15</p>
+            <p><strong>Режим работы:</strong> ежедневно с 09:00 до 22:00</p>
+            <p><strong>Телефон:</strong> +7 (495) 123-45-67</p>
+            <p><strong>E-mail:</strong> info@booking.ru</p>
+        </footer>
+
+      
+
+    <!-- Подключение скрипта -->
+    <script src="script.js"></script>
+</body>
+</html>
