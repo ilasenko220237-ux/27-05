@@ -129,21 +129,18 @@ function validateName(name) {
 }
 
 // Валидация телефона (формат +7(XXX)XXX-XX-XX)
-// ИСПРАВЛЕНО: добавлены экранирования \+ и \(
 function validatePhone(phone) {
     const regex = /^\+7\(\d{3}\)\d{3}-\d{2}-\d{2}$/;
     return regex.test(phone);
 }
 
 // Валидация email
-// ИСПРАВЛЕНО: добавлено экранирование \.
 function validateEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
 
 // Валидация даты (формат ДД.ММ.ГГГГ)
-// ИСПРАВЛЕНО: добавлено экранирование \.
 function validateDate(date) {
     const regex = /^\d{2}\.\d{2}\.\d{4}$/;
     if (!regex.test(date)) return false;
@@ -255,15 +252,6 @@ function submitBooking(event) {
             goBack();
         }, 3000);
     }
-}
-
-// Сохранение скриншота (упрощенная версия)
-function saveScreenshot() {
-    alert('Для сохранения скриншота:\n\n' +
-          '1. Нажмите Ctrl+Shift+S (Firefox)\n' +
-          '2. Или используйте Print Screen\n' +
-          '3. Или сделайте скриншот через систему (Win+Shift+S)\n\n' +
-          'Функция автоматического сохранения требует подключения библиотеки html2canvas');
 }
 
 // Маска для телефона
